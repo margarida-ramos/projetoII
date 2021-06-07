@@ -13,9 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         level: {
             type: DataTypes.INTEGER
         },
-        courseId: {
-            type: DataTypes.INTEGER
-        },
         classId: {
             type: DataTypes.INTEGER
         }
