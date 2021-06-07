@@ -4,7 +4,7 @@ const Course = db.course;
 //necessary for LIKE operator
 const { Op } = require('sequelize');
 
-exports.findAll = (req, res) => {
+/* exports.findAll = (req, res) => {
     Course.findAll()
         .then(data => {
             res.status(200).json(data);
@@ -104,4 +104,90 @@ exports.update = (req, res) => {
                 message: `${err.message} Error retrieving Course with id ${req.params.courseID}.`
             });
         });
+}; */
+
+// Get all courses for logged user or Admin
+exports.getAllCourses = async (req, res) => {
+    try {
+
+        Course.findAll(res.body)
+            .then(data => {
+                if (data == '') {
+                    res.status(200).json({ message: "Courses is empty" });
+                } else {
+                    res.status(200).json(data);
+                }
+
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message:
+                        err.message || "Some error occurred while retrieving Courses."
+                });
+            });
+
+    }
+    catch (err) {
+
+        res.status(500).json({ message: err.message });
+
+    };
+
+};
+
+// Create new course only by Admin
+exports.createNewCourse = async (req, res) => {
+    try {
+        // check duplicate username
+        let course = await Course.findOne(
+            { where: { name: req.body.name } }
+        );
+        if (course)
+            return res.status(400).json({ message: "Failed! This name for course is already in use!" });
+        // save User to database
+        course = await Course.create({
+            name: req.body.name,
+            description: req.body.description,
+        });
+
+        return res.json({ message: "Course was created successfully!" });
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    };
+};
+
+// Delete a course only by an admin
+exports.deleteCourse = async (req, res) => {
+
+    try {
+
+        Course.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+            .then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    res.status(200).json({
+                        message: `Deleted course with id ${req.params.id}.`
+                    });
+                } else {
+                    res.status(404).json({
+                        message: `Id ${req.params.id} not found.`
+                    });
+                }
+            }, function (err) {
+                res.status(500).json({
+                    message: err.message || "Some error occurred while deleting the course."
+                });
+            });
+
+    }
+    catch (err) {
+
+        res.status(500).json({ message: err.message });
+
+    };
+
 };
