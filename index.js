@@ -15,10 +15,10 @@ app.get('/', function (req, res) {
 });
 
 // routing middleware for resources
-// app.use('/activities', require('./routes/activities.routes.js'))
-// app.use('/courses', require('./routes/courses.routes.js'))
+app.use('/activities', require('./routes/activities.routes.js'))
+app.use('/courses', require('./routes/courses.routes.js'))
 app.use('/usertypes', require('./routes/usertypes.routes.js'))
-// app.use('/classes', require('./routes/classes.routes.js'))
+app.use('/classes', require('./routes/classes.routes.js'))
 // app.use('/badges', require('./routes/badges.routes.js'))
 // app.use('/histories', require('./routes/histories.routes.js'))
 // app.use('/notifications', require('./routes/notifications.routes.js'))
