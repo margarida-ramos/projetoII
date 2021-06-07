@@ -2,9 +2,9 @@ const config = {
     /* don't expose password or any sensitive info, done only for demo */
     // if environment variables are not defined, use default values
     HOST: process.env.DB_HOST || 'remotemysql.com',
-    USER: process.env.DB_USER || 'vJHtQYTfUD',
-    PASSWORD: process.env.DB_PASSWORD || 'lS2NkUtoUU',
-    DB: process.env.DB_NAME || 'vJHtQYTfUD'
+    USER: process.env.DB_USER || 'mo5axsLez7',
+    PASSWORD: process.env.DB_PASSWORD || 'b0nLxGvQuX',
+    DB: process.env.DB_NAME || 'mo5axsLez7'
 
     ,
     dialect: "mysql",
