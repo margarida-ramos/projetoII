@@ -1,30 +1,23 @@
 const express = require('express');
+const authController = require("../controllers/auth.controller.js");
+const userController = require("../controllers/users.controller.js");
 let router = express.Router();
-const userController = require('../controllers/users.controller.js');
 
-// middleware for all routes related with users
 router.use((req, res, next) => {
-    const start = Date.now();
-    res.on("finish", () => { //finish event is emitted once the response is sent to the client
-        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
-        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
-    });
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
     next()
 })
 
 router.route('/')
-    .get(userController.findAll)
-    .post(userController.create)
+    .get(authController.verifyToken, authController.isAdmin, userController.getAllUsers)
 
 router.route('/:username')
-    .get(userController.findOne)
-    .delete(userController.delete)
-    .put(userController.update)
+    .get(authController.verifyToken, authController.isAdminOrLoggedUser, userController.getUser)
+    .put(authController.verifyToken, authController.isAdminOrLoggedUser, userController.updateUser)
+    .delete(authController.verifyToken, authController.isAdmin, userController.deleteUser)
 
-//send a predefined error message for invalid routes on USERS
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'USERS: what???' });
+    res.status(404).json({ message: 'AUTHENTICATION: what???' });
 })
 
-// EXPORT ROUTES (required by APP)
 module.exports = router;
