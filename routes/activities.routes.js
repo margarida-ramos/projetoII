@@ -1,18 +1,15 @@
 const express = require('express');
 let router = express.Router();
+const authController = require("../controllers/auth.controller.js");
 const activityController = require('../controllers/activities.controller.js');
 
 // middleware for all routes related with activities
 router.use((req, res, next) => {
-    const start = Date.now();
-    res.on("finish", () => { //finish event is emitted once the response is sent to the client
-        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
-        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
-    });
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
     next()
 })
 
-router.route('/')
+/* router.route('/')
     .get(activityController.findAll)
     .post(activityController.create);
 
@@ -23,6 +20,14 @@ router.route('/:activityID')
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'ACTIVITIES: what???' });
+}) */
+
+router.route('/')
+    .get(authController.verifyToken, authController.isAdminOrLoggedUser, activityController.getAllActivities)
+    .post(authController.verifyToken, authController.isAdmin, activityController.createNewActivity)
+
+router.all('*', function (req, res) {
+    res.status(404).json({ message: 'AUTHENTICATION activities: what???' });
 })
 
 // EXPORT ROUTES (required by APP)

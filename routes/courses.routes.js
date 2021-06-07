@@ -1,18 +1,15 @@
 const express = require('express');
 let router = express.Router();
+const authController = require("../controllers/auth.controller.js");
 const courseController = require('../controllers/courses.controller.js');
 
 // middleware for all routes related with courses
 router.use((req, res, next) => {
-    const start = Date.now();
-    res.on("finish", () => { //finish event is emitted once the response is sent to the client
-        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
-        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
-    });
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
     next()
 })
 
-router.route('/')
+/* router.route('/')
     .get(courseController.findAll)
     .post(courseController.create);
 
@@ -23,6 +20,17 @@ router.route('/:courseID')
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'COURSES: what???' });
+}) */
+
+router.route('/')
+    .get(authController.verifyToken, authController.isAdminOrLoggedUser, courseController.getAllCourses)
+    .post(authController.verifyToken, authController.isAdmin, courseController.createNewCourse)
+
+router.route('/:id')
+    .delete(authController.verifyToken, authController.isAdmin, courseController.deleteCourse)
+
+router.all('*', function (req, res) {
+    res.status(404).json({ message: 'AUTHENTICATION Courses: what???' });
 })
 
 // EXPORT ROUTES (required by APP)
