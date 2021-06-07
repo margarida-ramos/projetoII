@@ -1,44 +1,48 @@
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define("user", {
 
-        Username: {
-            type: DataTypes.STRING,
+        id: {
+            type: DataTypes.INTEGER,
             primaryKey: true,
+            unique: true,
+            allowNull: false,
+            autoIncrement: true
+        },
+        username: {
+            type: DataTypes.STRING,
             unique: true,
             allowNull: false,
             validate: { notEmpty: { msg: "Username can not be empty!" } }
         },
-        Name: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notEmpty: { msg: "Name can not be empty!" } }
         },
-        Password: {
+        password: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notEmpty: { msg: "Password can not be empty!" } }
         },
-        BirthDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: { notNull: { msg: "BirthDate can not be empty!" } }
-        },
-        Sex: {
+        sex: {
             type: DataTypes.STRING
         },
-        ProfilePicURI: {
+        profilePicURI: {
             type: DataTypes.STRING
         },
-        Points: {
+        points: {
             type: DataTypes.INTEGER
         },
-        Coins: {
+        coins: {
+            type: DataTypes.INTEGER
+        },
+        userTypeId: {
             type: DataTypes.INTEGER
         }
     }, {
         timestamps: false
     });
-    User.removeAttribute('id');
+    //User.removeAttribute('id');
 
     return User;
 };

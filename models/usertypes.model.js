@@ -1,14 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
-    const Usertype = sequelize.define("usertype", {
+    const Usertype = sequelize.define("userType", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
-        Description: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: { notEmpty: { msg: "Title can not be empty!" } }
+            validate: { notEmpty: { msg: "name can not be empty!" } }
         }
     }, {
         timestamps: false
