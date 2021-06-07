@@ -5,25 +5,23 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        Message: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: { notEmpty: { msg: "Message can not be empty!" } }
-        },
-        Link: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: { notEmpty: { msg: "Link can not be empty!" } }
-        },
-        Date: {
+        date: {
             type: DataTypes.DATE,
             allowNull: false,
             validate: { notEmpty: { msg: "Date can not be empty!" } }
         },
-        Read: {
+        read: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             validate: { notEmpty: { msg: "Read can not be empty!" } }
+        },
+        idUser: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        idAnswer: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     }, {
         timestamps: false

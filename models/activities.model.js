@@ -5,12 +5,18 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        Title: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notEmpty: { msg: "Title can not be empty!" } }
         },
-        Level: {
+        level: {
+            type: DataTypes.INTEGER
+        },
+        couseId: {
+            type: DataTypes.INTEGER
+        },
+        classId: {
             type: DataTypes.INTEGER
         }
     }, {
