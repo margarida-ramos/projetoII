@@ -9,19 +9,6 @@ router.use((req, res, next) => {
     next()
 })
 
-/* router.route('/')
-    .get(activityController.findAll)
-    .post(activityController.create);
-
-router.route('/:activityID')
-    .get(activityController.findOne)
-    .delete(activityController.delete)
-    .put(activityController.update);
-
-router.all('*', function (req, res) {
-    res.status(404).json({ message: 'ACTIVITIES: what???' });
-}) */
-
 router.route('/')
     .get(authController.verifyToken, authController.isAdminOrLoggedUser, activityController.getAllActivities)
     .post(authController.verifyToken, authController.isAdmin, activityController.createNewActivity)

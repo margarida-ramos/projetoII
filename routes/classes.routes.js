@@ -9,19 +9,6 @@ router.use((req, res, next) => {
     next()
 })
 
-/* router.route('/')
-    .get(classController.findAll)
-    .post(classController.create);
-
-router.route('/:classID')
-    .get(classController.findOne)
-    .delete(classController.delete)
-    .put(classController.update);
-
-router.all('*', function (req, res) {
-    res.status(404).json({ message: 'CLASSES: what???' });
-}) */
-
 router.route('/')
     .get(authController.verifyToken, authController.isAdminOrLoggedUser, classController.getAllClasses)
     .post(authController.verifyToken, authController.isAdmin, classController.createNewClass)

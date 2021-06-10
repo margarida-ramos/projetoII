@@ -1,25 +1,22 @@
 const express = require('express');
 let router = express.Router();
+const authController = require("../controllers/auth.controller.js");
 const usertypeController = require('../controllers/usertypes.controller.js');
 
 // middleware for all routes related with usertypes
 router.use((req, res, next) => {
-    const start = Date.now();
-    res.on("finish", () => { //finish event is emitted once the response is sent to the client
-        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
-        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
-    });
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
     next()
 })
 
 router.route('/')
-    .get(usertypeController.findAll)
-    .post(usertypeController.create);
+    .get(authController.verifyToken, authController.isAdmin, usertypeController.getAllUserTypes)
+    .post(authController.verifyToken, authController.isAdmin, usertypeController.createUsertype)
 
-router.route('/:usertypeID')
-    .get(usertypeController.findOne)
-    .delete(usertypeController.delete)
-    .put(usertypeController.update);
+
+router.route('/:name')
+    .put(authController.verifyToken, authController.isAdmin, usertypeController.updateUsertype)
+    .delete(authController.verifyToken, authController.isAdmin, usertypeController.deleteUsertype)
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'USERTYPES: what???' });

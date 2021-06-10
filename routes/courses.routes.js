@@ -9,19 +9,6 @@ router.use((req, res, next) => {
     next()
 })
 
-/* router.route('/')
-    .get(courseController.findAll)
-    .post(courseController.create);
-
-router.route('/:courseID')
-    .get(courseController.findOne)
-    .delete(courseController.delete)
-    .put(courseController.update);
-
-router.all('*', function (req, res) {
-    res.status(404).json({ message: 'COURSES: what???' });
-}) */
-
 router.route('/')
     .get(authController.verifyToken, authController.isAdminOrLoggedUser, courseController.getAllCourses)
     .post(authController.verifyToken, authController.isAdmin, courseController.createNewCourse)
