@@ -15,19 +15,19 @@ app.get('/', function (req, res) {
 });
 
 // routing middleware for resources
+app.use('/classes', require('./routes/classes.routes.js'))
 app.use('/activities', require('./routes/activities.routes.js'))
 app.use('/courses', require('./routes/courses.routes.js'))
 app.use('/usertypes', require('./routes/usertypes.routes.js'))
-app.use('/classes', require('./routes/classes.routes.js'))
 app.use('/questions', require('./routes/questions.routes.js'))
-// app.use('/answers', require('./routes/answers.routes.js'))
-// app.use('/submissions', require('./routes/submissions.routes.js'))
+app.use('/answers', require('./routes/answers.routes.js'))
+app.use('/submissions', require('./routes/submissions.routes.js'))
 app.use('/users', require('./routes/users.routes.js'))
 app.use('/auth', require('./routes/auth.routes.js'))
 
 // handle invalid routes
 app.get('*', function (req, res) {
-    res.status(404).json({ message: 'WHAT???' });
+    res.status(404).json({ message: 'Something went wrong...' });
 })
 
 app.listen(port, host, () => console.log(`App listening at http://${host}:${port}/`));

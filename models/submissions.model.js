@@ -7,19 +7,18 @@ module.exports = (sequelize, DataTypes) => {
         },
         date: {
             type: DataTypes.DATE,
-            allowNull: false,
-            validate: { notEmpty: { msg: "Date can not be empty!" } }
+            allowNull: false
         },
         read: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             validate: { notEmpty: { msg: "Read can not be empty!" } }
         },
-        idUser: {
+        userId: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        idAnswer: {
+        answerId: {
             type: DataTypes.INTEGER,
             allowNull: false
         }

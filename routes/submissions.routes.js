@@ -1,29 +1,22 @@
 const express = require('express');
 let router = express.Router();
 const submissionController = require('../controllers/submissions.controller.js');
+const authController = require("../controllers/auth.controller.js");
 
-// middleware for all routes related with submissions
+
 router.use((req, res, next) => {
-    const start = Date.now();
-    res.on("finish", () => { //finish event is emitted once the response is sent to the client
-        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
-        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
-    });
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
     next()
 })
 
 router.route('/')
-    .get(submissionController.findAll)
-    .post(submissionController.create);
+    .get(authController.verifyToken, authController.isAdminOrLoggedUser, submissionController.getAllSubmissions)
+    .post(authController.verifyToken, authController.isAdminOrLoggedUser, submissionController.createSubmission)
 
-router.route('/:submissionID')
-    .get(submissionController.findOne)
-    .delete(submissionController.delete)
-    .put(submissionController.update);
-
+router.route('/:id')
+    .get(authController.verifyToken, authController.isAdminOrLoggedUser, submissionController.getAllSubmissionsForUser)
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'SUBMISSIONS: what???' });
+    res.status(404).json({ message: 'SUBMISSIONS: Something went wrong...' });
 })
-
 // EXPORT ROUTES (required by APP)
 module.exports = router;

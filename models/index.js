@@ -35,10 +35,6 @@ db.submission = require("./submissions.model.js")(sequelize, DataTypes);
 db.question = require("./questions.model.js")(sequelize, DataTypes);
 db.answer = require("./answers.model.js")(sequelize, DataTypes);
 
-//define the User-Badge m:n relationship
-//db.badge.belongsToMany(db.user, { through: 'UserBadges' });
-//db.user.belongsToMany(db.badge, { through: 'UserBadges' });
-
 //define 1:N relationships
 /* db.course.hasMany(db.activity);
 db.activity.belongsTo(db.course);
@@ -61,15 +57,32 @@ db.submission.belongsTo(db.user);
 
 /* 
 
-db.course.hasMany(db.user, {
-    foreignKey: 'courseId'
-});
-db.user.belongsTo(db.course);
+
 
 db.submission.hasMany(db.user, {
     foreignKey: 'idUser'
 });
 db.user.belongsTo(db.submission); */
+db.activity.hasMany(db.class, {
+    foreignKey: 'classId'
+});
+db.class.belongsTo(db.activity);
+
+db.user.hasMany(db.submission, {
+    foreignKey: 'userId'
+});
+db.submission.belongsTo(db.user);
+
+db.answer.hasMany(db.submission, {
+    foreignKey: 'answerId'
+});
+db.submission.belongsTo(db.answer);
+
+db.question.hasMany(db.answer, {
+    foreignKey: 'questionId'
+});
+db.answer.belongsTo(db.question);
+
 db.activity.hasMany(db.question, {
     foreignKey: 'activityId'
 });
@@ -79,11 +92,6 @@ db.activity.hasMany(db.course, {
     foreignKey: 'courseId'
 });
 db.course.belongsTo(db.activity);
-
-db.activity.hasMany(db.class, {
-    foreignKey: 'classId'
-});
-db.class.belongsTo(db.activity);
 
 db.class.hasMany(db.course, {
     foreignKey: 'courseId'

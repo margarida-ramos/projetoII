@@ -20,7 +20,6 @@ exports.signup = async (req, res) => {
             email: req.body.email,
             name: req.body.name,
             password: bcrypt.hashSync(req.body.password, 8) // generates hash to password
-
         });
 
         if (req.body.usertype) {
@@ -29,7 +28,7 @@ exports.signup = async (req, res) => {
                 await user.setUserType(usertype);
         }
         else
-            await user.setUserType(1); // user usertype = 1 (ADMIN)
+            await user.setUserType(1); // user usertype = 0( Regular)
         return res.json({ message: "User was registered successfully!" });
     }
     catch (err) {

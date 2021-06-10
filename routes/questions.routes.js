@@ -12,6 +12,9 @@ router.route('/')
     .get(authController.verifyToken, authController.isAdmin, questionController.getAllQuestions)
     .post(authController.verifyToken, authController.isAdmin, questionController.createQuestion)
 
+router.route('/:id')
+    .delete(authController.verifyToken, authController.isAdmin, questionController.deleteQuestion)
+
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'QUESTIONS: Something went wrong...' });

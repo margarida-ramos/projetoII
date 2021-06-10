@@ -134,3 +134,38 @@ exports.createQuestion = async (req, res) => {
     }
 
 }
+
+// Delete Question only by admin
+exports.deleteQuestion = async (req, res) => {
+
+    try {
+
+        Question.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+            .then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    res.status(200).json({
+                        message: `Deleted Question with id ${req.params.id}.`
+                    });
+                } else {
+                    res.status(404).json({
+                        message: `Question with id ${req.params.id} not found.`
+                    });
+                }
+            }, function (err) {
+                res.status(500).json({
+                    message: err.message || "Some error occurred while creating the Question."
+                });
+            });
+
+    }
+    catch (err) {
+
+        res.status(500).json({ message: err.message });
+
+    };
+
+};
