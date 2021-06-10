@@ -4,30 +4,31 @@ const bcrypt = require("bcryptjs");
 
 const { Op } = require('sequelize');
 
+const Usertype = db.usertype;
+
 // Get all Users for logged ADMIN users
 exports.getAllUsers = async (req, res) => {
     try {
 
-        User.findAll(res.body)
-            .then(data => {
-                if (data == '') {
-                    res.status(200).json({ message: "Users is empty" });
-                } else {
-                    res.status(200).json(data);
-                }
+        let data = await User.findAll({
+            include: {
+                model: Usertype,
+                attributes: ["name"]
+            }
+        })
 
-            })
-            .catch(err => {
-                res.status(500).json({
-                    message:
-                        err.message || "Some error occurred while retrieving Users."
-                });
-            });
-
+        if (data == '') {
+            res.status(200).json({ message: "Users is empty" });
+        } else {
+            res.status(200).json(data);
+        }
     }
     catch (err) {
 
-        res.status(500).json({ message: err.message });
+        res.status(500).json({
+            message:
+                err.message || "Some error occurred while retrieving Users."
+        });
 
     };
 
@@ -43,6 +44,10 @@ exports.getUser = async (req, res) => {
             },
             attributes: {
                 exclude: ['id', 'password']
+            },
+            include: {
+                model: Usertype,
+                attributes: ["name"]
             }
         })
             .then(data => {
@@ -85,7 +90,6 @@ exports.updateUser = async (req, res) => {
                 }
 
                 user.name = req.body.name;
-                //user.birthDate = req.body.birthDate;
                 user.password = bcrypt.hashSync(req.body.password, 8);
                 user.save();
 
@@ -96,7 +100,6 @@ exports.updateUser = async (req, res) => {
                 res.json(user);
             })
             .catch(err => {
-                console.log('err', err);
                 res.status(500).json({
                     message: `Error retrieving User with Username ${req.params.username}.`
                 });

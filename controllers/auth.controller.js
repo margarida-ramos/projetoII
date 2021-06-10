@@ -13,13 +13,14 @@ exports.signup = async (req, res) => {
         );
         if (user)
             return res.status(400).json({ message: "Failed! Username is already in use!" });
+
         // save User to database
         user = await User.create({
             username: req.body.username,
             email: req.body.email,
             name: req.body.name,
             password: bcrypt.hashSync(req.body.password, 8) // generates hash to password
-            //usertype: req.body.usertype
+
         });
 
         if (req.body.usertype) {
@@ -28,7 +29,7 @@ exports.signup = async (req, res) => {
                 await user.setUserType(usertype);
         }
         else
-            await user.setUserType(1); // user usertype = 1 (regular use; not ADMIN)
+            await user.setUserType(1); // user usertype = 1 (ADMIN)
         return res.json({ message: "User was registered successfully!" });
     }
     catch (err) {
@@ -50,10 +51,8 @@ exports.signin = async (req, res) => {
             });
         }
         // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
-        //console.log('user:' + JSON.stringify(user));
-        //console.log('user.id:' + user.id);
         const token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400 // 24 hours
+            expiresIn: 1296000 // 15 dias
         });
 
         let usertype = await user.getUserType();
@@ -66,7 +65,7 @@ exports.signin = async (req, res) => {
 };
 
 exports.verifyToken = (req, res, next) => {
-    console.log('verifyToken')
+
     let token = req.headers["x-access-token"];
     if (!token) {
         return res.status(403).send({
@@ -84,11 +83,21 @@ exports.verifyToken = (req, res, next) => {
     });
 };
 
+exports.isProfessor = async (req, res, next) => {
+    let user = await User.findByPk(req.loggedUserId);
+    let usertype = await user.getUserType();
+
+    if (usertype.id === 2)
+        return next();
+
+    return res.status(403).send({ message: "Require Professor or Admin Usertype!" })
+}
+
 exports.isAdmin = async (req, res, next) => {
 
     let user = await User.findByPk(req.loggedUserId);
     let usertype = await user.getUserType();
-    console.log('usertype', usertype);
+
     if (usertype.id === 1)
         return next();
 
@@ -102,7 +111,7 @@ exports.isAdminOrLoggedUser = async (req, res, next) => {
     if (usertype.name === "Admin" || (user.username == req.params.username))
         return next();
     return res.status(403).send({
-        message: "Require Admin Usertype!"
+        message: "Require Logged user or Admin Usertype!"
     });
 };
 
