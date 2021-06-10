@@ -70,6 +70,10 @@ db.submission.hasMany(db.user, {
     foreignKey: 'idUser'
 });
 db.user.belongsTo(db.submission); */
+db.activity.hasMany(db.question, {
+    foreignKey: 'activityId'
+});
+db.question.belongsTo(db.activity);
 
 db.activity.hasMany(db.course, {
     foreignKey: 'courseId'
